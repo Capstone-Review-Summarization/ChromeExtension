@@ -1,0 +1,13 @@
+product_title:
+    css: 'h1 a[data-hook="product-link"]'
+    type: Text
+reviews:
+    css: 'div.a-row.review-data span.review-text'
+    multiple: true
+    type: Text
+next_page:
+    css: 'li.a-last a'
+    type: Link
+all_reviews_link:
+    css: 'a.a-link-emphasis.a-text-bold'
+    type: Link
