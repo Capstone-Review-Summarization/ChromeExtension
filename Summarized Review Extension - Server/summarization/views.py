@@ -2,7 +2,10 @@ import imp
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from .scrapper import Scrapper
-from django.views.decorators.csrf import csrf_exempt 
+from .Model.Preprocessing import Preprocess
+from .Model.SentimentAnalysis import SentimentAnalysis
+from .Model.Summarization import Summarization
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 
@@ -18,5 +21,18 @@ def summarize(request):
     print(body_data.get('page_url'))
     scrap = Scrapper(url)
     review_results = scrap.scrape_reviews()
+    preprocess = Preprocess(review_results)
+    preprocess.pre_process_data()
+    sentiment = SentimentAnalysis(preprocess)
+    summarize = Summarization()
+    positive_review = summarize.summarize_reviews(
+        sentiment.corpus_for_positive_clustering)
+    negative_review = summarize.summarize_reviews(
+        sentiment.corpus_for_negative_clustering)
+    print(positive_review)
+    print(negative_review)
     print(len(review_results))
-    return JsonResponse({"review": review_results})
+    return JsonResponse({"review": review_results,
+                         "positive_review": positive_review,
+                         "negative_review": negative_review
+                         })
