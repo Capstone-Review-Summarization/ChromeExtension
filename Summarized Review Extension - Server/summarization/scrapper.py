@@ -2,7 +2,7 @@ from email.header import Header
 import imp
 import requests
 from bs4 import BeautifulSoup
-from wsproto import Headers
+
 
 
 class Scrapper:

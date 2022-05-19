@@ -24,25 +24,31 @@ class SentimentAnalysis:
         pass
 
     def predict_model(self):
-        model = tf.keras.models.load_model('model2.hdf5')
+        model = tf.keras.models.load_model('C:\\Users\\Divyang\\Desktop\\ChromeExtension\\Summarized Review Extension - Server\\summarization\\model2.hdf5')
         for i in range(len(self.preprocess.reviews_scraped_df['reviewCleaned'])):
             review = [self.preprocess.reviews_scraped_df['reviewCleaned'][i]]
             self.vectorize(review)
             sentiment = model.predict(self.review, batch_size=1, verbose=2)[0]
             if (np.argmax(sentiment) == 1):
-                positive_reviews = positive_reviews.append(
+                self.preprocess.positive_reviews = self.preprocess.positive_reviews.append(
                     {'reviewText': self.preprocess.reviews_scraped_df['reviewText'][i],
                      'reviewCleaned': self.preprocess.reviews_scraped_df['reviewCleaned'][i]
                      }, ignore_index=True)
             elif (np.argmax(sentiment) == 0):
-                negative_reviews = negative_reviews.append(
+                self.preprocess.negative_reviews = self.preprocess.negative_reviews.append(
                     {'reviewText': self.preprocess.reviews_scraped_df['reviewText'][i],
                      'reviewCleaned': self.preprocess.reviews_scraped_df['reviewCleaned'][i]
                      }, ignore_index=True)
-            self.corpus_for_positive_clustering = positive_reviews['reviewText'].tolist(
-            )
-            self.corpus_for_negative_clustering = negative_reviews['reviewText'].tolist(
-            )
+        corpus_for_positive_clustering = self.preprocess.positive_reviews['reviewText'].tolist(
+        )
+        self.corpus_for_positive_clustering = corpus_for_positive_clustering
+        print(self.corpus_for_positive_clustering)
+        corpus_for_negative_clustering = self.preprocess.negative_reviews['reviewText'].tolist(
+        )
+        
+        self.corpus_for_negative_clustering = corpus_for_negative_clustering
+        print("Negative Cluster")
+        print(self.corpus_for_negative_clustering)
 
     def vectorize(self, review):
         max_features = 2000

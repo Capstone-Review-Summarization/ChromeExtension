@@ -26,6 +26,7 @@ class Summarization:
     def summarize_reviews(self, content_list):
         if (len(content_list) <= 1):
             return content_list
+        
         while (len(content_list) > 1):
             text_clusters = self.clustering(content_list)
             for i in range(len(text_clusters[0])):
@@ -34,7 +35,8 @@ class Summarization:
             wre_text_clusters = self.clustering(wre_clusters)
             final_summary = self.summarizer(wre_text_clusters)
             content_list = final_summary
-        return final_summary
+            print(content_list)
+        return content_list
 
     def clustering(self, corpus_for_clustering):
         cluster = []
@@ -42,7 +44,7 @@ class Summarization:
         token_len = 0
 
         if(len(corpus_for_clustering) <= 2):
-            clusters = [review for review in corpus_for_clustering]
+            return corpus_for_clustering
 
         while len(corpus_for_clustering) > 2:
             pivot_data = random.choice(corpus_for_clustering)
@@ -52,7 +54,7 @@ class Summarization:
             # getting rouge-1 f1 score for all data wrt to pivot_data
             for j in range(len(corpus_for_clustering)):
                 if (pivot_data != corpus_for_clustering[j]):
-                    scores = rouge.get_scores(
+                    scores = self.rouge.get_scores(
                         pivot_data, corpus_for_clustering[j])
                     df_cluster = df_cluster.append(
                         {'text': corpus_for_clustering[j], 'rouge-1 score': scores[0].get('rouge-1').get('f')}, ignore_index=True)
@@ -90,7 +92,7 @@ class Summarization:
                 if(review != '\n'):
                     for other_review in review_list:
                         if(other_review != review):
-                            score = rouge.get_scores(review, other_review)
+                            score = self.rouge.get_scores(review, other_review)
                             total_score = total_score + \
                                 score[0].get('rouge-1').get('f') / \
                                 (len(review_list) - 1)

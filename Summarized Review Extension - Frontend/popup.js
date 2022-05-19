@@ -7,7 +7,8 @@ $(function(){
 					'get_summarised_reviews',
 					function(response) {
 						result = response.farewell;
-						$('#summarised_reviews').text(result.review[0]);
+						$('#positive_reviews').text(result.positive_review[0]);
+						$('#negative_reviews').text(result.negative_review[0]);
 						console.log(result)
 						console.log(result.review[0])
 						var notifOptions = {

@@ -19,8 +19,8 @@ import nltk
 
 
 class Preprocess:
-    def __init__(self, scraped_reviews):
-        self.scraped_reviews = scraped_reviews
+    def __init__(self, reviews_scraped):
+        self.reviews_scraped = reviews_scraped
 
     def pre_process_data(self):
         reviews_scraped_df = pd.DataFrame(
@@ -30,10 +30,12 @@ class Preprocess:
             '\n', ' ')
         reviews_scraped_df["reviewCleaned"] = reviews_scraped_df["reviewText"].apply(
             lambda x: self.clean_reviews(str(x)))
-        self.reviews_scraped_df.reviewCleaned = reviews_scraped_df.reviewCleaned.astype(
+        reviews_scraped_df.reviewCleaned = reviews_scraped_df.reviewCleaned.astype(
             str)
+        self.reviews_scraped_df = reviews_scraped_df
         self.positive_reviews = pd.DataFrame(
             columns=['reviewText', 'reviewCleaned'])
+        # print(reviews_scraped_df.head())
         self.negative_reviews = pd.DataFrame(
             columns=['reviewText', 'reviewCleaned'])
 

@@ -8,18 +8,19 @@ from dateutil import parser as dateparser
 class Scrape:
     def __init__(self, url):
         self.url = url
-        self.e = Extractor.from_yaml_file('selectors.yml')
+        self.e = Extractor.from_yaml_file('C:\\Users\\Divyang\\Desktop\\ChromeExtension\\Summarized Review Extension - Server\\summarization\\Scrapper\\selectors.yml')
 
     def scrape(self):
         data = self.get_text(self.url)
         reviews = []
         data['next_page'] = data['all_reviews_link']
         if data:
-            while data['next_page'] and len(reviews) < 50:
+            while data['next_page'] and len(reviews) < 100:
                 data = self.get_text(
                     'https://www.amazon.in/' + data['next_page'])
                 for review in data['reviews']:
                     reviews.append(review)
+        reviews = self.preprocess_data(reviews)
         return reviews
 
     def get_text(self, url):
@@ -40,3 +41,12 @@ class Scrape:
         if r.status_code > 500:
             return None
         return self.e.extract(r.text)
+    
+    def preprocess_data(self, review_data):
+        review_result = []
+        for i in review_data:
+            if i == "":
+                pass
+            else:
+                review_result.append(i)
+        return review_result
