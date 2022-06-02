@@ -15,7 +15,7 @@ class Scrape:
         reviews = []
         data['next_page'] = data['all_reviews_link']
         if data:
-            while data['next_page'] and len(reviews) < 100:
+            while data['next_page'] is not  None and len(reviews) < 20:
                 data = self.get_text(
                     'https://www.amazon.in/' + data['next_page'])
                 for review in data['reviews']:

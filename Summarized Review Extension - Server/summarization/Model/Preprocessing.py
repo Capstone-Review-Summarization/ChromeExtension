@@ -16,6 +16,7 @@ import random
 from nltk.tokenize import sent_tokenize
 from summarizer import Summarizer
 import nltk
+import re
 
 
 class Preprocess:
@@ -26,10 +27,14 @@ class Preprocess:
         reviews_scraped_df = pd.DataFrame(
             self.reviews_scraped, columns=['reviewText'])
         reviews_scraped_df['reviewCleaned'] = ''
-        reviews_scraped_df['reviewText'] = reviews_scraped_df['reviewText'].str.replace(
+        reviews_scraped_df['reviewText'] = reviews_scraped_df['reviewText'].astype(str)
+        reviews_scraped_df['reviewCleaned'] = reviews_scraped_df['reviewText'].apply(lambda x: x.lower()) #lower caseing
+        reviews_scraped_df['reviewCleaned'] = reviews_scraped_df['reviewText'].apply((lambda x: re.sub('[^a-zA-z0-9\s]','',x))) # removing special chars
+        reviews_scraped_df['reviewCleaned'] = reviews_scraped_df['reviewText'].apply(lambda x: x.strip())
+        reviews_scraped_df['reviewCleaned'] = reviews_scraped_df['reviewText'].str.replace(
             '\n', ' ')
-        reviews_scraped_df["reviewCleaned"] = reviews_scraped_df["reviewText"].apply(
-            lambda x: self.clean_reviews(str(x)))
+        # reviews_scraped_df["reviewCleaned"] = reviews_scraped_df["reviewText"].apply(
+        #     lambda x: self.clean_reviews(str(x)))
         reviews_scraped_df.reviewCleaned = reviews_scraped_df.reviewCleaned.astype(
             str)
         self.reviews_scraped_df = reviews_scraped_df
